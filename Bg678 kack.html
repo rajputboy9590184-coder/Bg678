@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>BG678 30 Sec WinGo</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial,sans-serif;
+    background:#f1f3f5;
+    color:#222;
+}
+
+.app{
+    width:100%;
+    max-width:430px;
+    min-height:100vh;
+    margin:auto;
+    overflow:hidden;
+    background:#f1f3f5;
+}
+
+.top{
+    position:relative;
+    height:118px;
+    background:linear-gradient(135deg,#079b4d,#16a85b,#079b4d);
+    color:white;
+}
+
+.top:before{
+    content:"";
+    position:absolute;
+    top:0;
+    bottom:0;
+    left:50%;
+    border-left:1px dashed rgba(255,255,255,.35);
+}
+
+.how{
+    position:absolute;
+    left:0;
+    top:29px;
+    width:148px;
+    height:23px;
+    border:1px solid white;
+    border-radius:15px;
+    text-align:center;
+    font-size:11px;
+    line-height:21px;
+    font-weight:bold;
+}
+
+.game-name{
+    position:absolute;
+    left:4px;
+    bottom:54px;
+    font-size:11px;
+    font-weight:bold;
+}
+
+.time-title{
+    position:absolute;
+    right:8px;
+    top:11px;
+    font-size:13px;
+    font-weight:bold;
+}
+
+.timer{
+    position:absolute;
+    right:8px;
+    top:31px;
+    display:flex;
+    align-items:center;
+    gap:3px;
+}
+
+.timer-box{
+    width:21px;
+    height:27px;
+    background:white;
+    color:#111;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:17px;
+    font-weight:bold;
+    border-radius:2px;
+}
+
+.timer-colon{
+    font-size:18px;
+    font-weight:bold;
+}
+
+.period{
+    position:absolute;
+    right:8px;
+    bottom:12px;
+    font-size:16px;
+    font-weight:bold;
+}
+
+.cut-left,
+.cut-right,
+.cut-center{
+    position:absolute;
+    width:16px;
+    height:16px;
+    background:#f1f3f5;
+    border-radius:50%;
+    bottom:-8px;
+}
+
+.cut-left{
+    left:-8px;
+}
+
+.cut-right{
+    right:-8px;
+}
+
+.cut-center{
+    left:50%;
+    transform:translateX(-50%);
+}
+
+.color-bar{
+    display:flex;
+    gap:10px;
+    padding:9px 7px 7px;
+    background:#f1f3f5;
+}
+
+.color{
+    flex:1;
+    height:35px;
+    border-radius:0 0 4px 4px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:white;
+    font-size:14px;
+    font-weight:bold;
+    box-shadow:0 2px 5px rgba(0,0,0,.12);
+}
+
+.color.green{
+    background:#3bb277;
+}
+
+.color.violet{
+    background:#ae52ed;
+}
+
+.color.red{
+    background:#ff555d;
+}
+
+.numbers{
+    background:#fff;
+    padding:10px 15px 12px;
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:12px 8px;
+}
+
+.number-item{
+    text-align:center;
+    font-size:11px;
+    color:#999;
+}
+
+.ball{
+    width:43px;
+    height:43px;
+    margin:auto;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:white;
+    font-size:19px;
+    font-weight:bold;
+    position:relative;
+
+    box-shadow:
+        inset 3px 4px 5px rgba(255,255,255,.65),
+        inset -5px -6px 8px rgba(0,0,0,.30),
+        0 3px 6px rgba(0,0,0,.20);
+}
+
+.ball.green{
+    background:linear-gradient(145deg,#68dfa4,#22aa6d);
+}
+
+.ball.red{
+    background:linear-gradient(145deg,#ff767d,#ee3f4c);
+}
+
+.ball.violet{
+    background:linear-gradient(145deg,#c16aff,#9340d9);
+}
+
+.ball.zero{
+    background:
+        conic-gradient(
+            #ff6670 0deg 72deg,
+            #b451ef 72deg 144deg,
+            #ff6670 144deg 216deg,
+            #b451ef 216deg 288deg,
+            #ff6670 288deg 360deg
+        );
+}
+
+.ball.five{
+    background:
+        conic-gradient(
+            #4fd093 0deg 72deg,
+            #b451ef 72deg 144deg,
+            #4fd093 144deg 216deg,
+            #b451ef 216deg 288deg,
+            #4fd093 288deg 360deg
+        );
+}
+
+.multiplier{
+    margin-top:3px;
+}
+
+.options{
+    display:flex;
+    gap:8px;
+    padding:10px 7px;
+    background:#f1f3f5;
+    overflow-x:auto;
+}
+
+.options::-webkit-scrollbar{
+    display:none;
+}
+
+.option{
+    min-width:52px;
+    height:33px;
+    border:0;
+    border-radius:6px;
+    background:#fff;
+    font-size:12px;
+    color:#333;
+}
+
+.option.random{
+    min-width:66px;
+    border:1px solid #24a46a;
+    color:#15945b;
+}
+
+.option.active{
+    background:#188f55;
+    color:#fff;
+    font-weight:bold;
+}
+
+.big-small{
+    display:flex;
+    margin:0 7px 7px;
+    height:35px;
+    overflow:hidden;
+    border-radius:20px;
+}
+
+.big{
+    width:50%;
+    background:#ffad2f;
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 15px;
+    font-size:15px;
+    font-weight:bold;
+}
+
+.small{
+    width:50%;
+    background:#68a3e9;
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 15px;
+    font-size:15px;
+    font-weight:bold;
+}
+
+.input-card{
+    margin:10px 7px;
+    padding:12px;
+    background:white;
+    border-radius:9px;
+    box-shadow:0 2px 6px rgba(0,0,0,.05);
+}
+
+.input-title{
+    color:#078b48;
+    font-size:14px;
+    font-weight:bold;
+    margin-bottom:8px;
+}
+
+.input-row{
+    display:flex;
+    gap:7px;
+}
+
+#lastInput{
+    flex:1;
+    height:38px;
+    border:1px solid #b9dfc9;
+    border-radius:7px;
+    padding:0 10px;
+    font-size:16px;
+    outline:none;
+}
+
+#lastInput:focus{
+    border-color:#078f4b;
+}
+
+#addBtn{
+    width:80px;
+    border:0;
+    border-radius:7px;
+    background:#078f4b;
+    color:#fff;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.final-card{
+    margin:10px 7px;
+    padding:18px;
+    border-radius:12px;
+    background:linear-gradient(
+        135deg,
+        #e9fff1,
+        #fff,
+        #e2f9e9
+    );
+    border:2px solid #35ad6d;
+    text-align:center;
+    box-shadow:0 4px 12px rgba(0,128,65,.15);
+}
+
+.final-title{
+    color:#078b48;
+    font-size:13px;
+    font-weight:bold;
+    letter-spacing:.5px;
+}
+
+.final-ball{
+    width:78px;
+    height:78px;
+    margin:12px auto 9px;
+    border-radius:50%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    color:#fff;
+    font-size:34px;
+    font-weight:800;
+
+    border:3px solid rgba(255,255,255,.75);
+
+    box-shadow:
+        inset 7px 7px 10px rgba(255,255,255,.65),
+        inset -8px -9px 12px rgba(0,0,0,.35),
+        0 6px 10px rgba(0,0,0,.22);
+
+    text-shadow:0 2px 3px rgba(0,0,0,.35);
+}
+
+.final-ball.green-result{
+    background:
+        radial-gradient(
+            circle at 30% 22%,
+            rgba(255,255,255,.9) 0%,
+            rgba(255,255,255,.35) 9%,
+            transparent 20%
+        ),
+        linear-gradient(
+            145deg,
+            #8eeab8,
+            #32bd7d,
+            #078047
+        );
+}
+
+.final-ball.red-result{
+    background:
+        radial-gradient(
+            circle at 30% 22%,
+            rgba(255,255,255,.9) 0%,
+            rgba(255,255,255,.35) 9%,
+            transparent 20%
+        ),
+        linear-gradient(
+            145deg,
+            #ff9da3,
+            #f0525e,
+            #a91829
+        );
+}
+
+.final-ball.violet-result{
+    background:
+        radial-gradient(
+            circle at 30% 22%,
+            rgba(255,255,255,.9) 0%,
+            rgba(255,255,255,.35) 9%,
+            transparent 20%
+        ),
+        linear-gradient(
+            145deg,
+            #df9fff,
+            #b34ee7,
+            #67239d
+        );
+}
+
+.final-ball.waiting{
+    background:#fff;
+    color:#777;
+    border-color:#ddd;
+    text-shadow:none;
+}
+
+.final-type{
+    font-size:18px;
+    font-weight:bold;
+}
+
+.final-color{
+    margin-top:4px;
+    font-size:12px;
+    font-weight:bold;
+    color:#078b48;
+}
+
+@media(max-width:360px){
+
+    .ball{
+        width:39px;
+        height:39px;
+    }
+
+    .numbers{
+        padding-left:8px;
+        padding-right:8px;
+    }
+
+    .final-ball{
+        width:72px;
+        height:72px;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<div class="top">
+
+<div class="how">
+▣ How to play
+</div>
+
+<div class="game-name">
+WinGo 30 second
+</div>
+
+<div class="time-title">
+Time remaining
+</div>
+
+<div class="timer">
+
+<div class="timer-box">0</div>
+<div class="timer-box">0</div>
+
+<div class="timer-colon">:</div>
+
+<div class="timer-box" id="t1">3</div>
+<div class="timer-box" id="t2">0</div>
+
+</div>
+
+<div class="period" id="period">
+2026082200062
+</div>
+
+<div class="cut-left"></div>
+<div class="cut-right"></div>
+<div class="cut-center"></div>
+
+</div>
+
+
+<div class="color-bar">
+
+<div class="color green">
+Green&nbsp;&nbsp;2X
+</div>
+
+<div class="color violet">
+Violet&nbsp;&nbsp;4.5X
+</div>
+
+<div class="color red">
+Red&nbsp;&nbsp;2X
+</div>
+
+</div>
+
+
+<div class="numbers">
+
+<div class="number-item">
+<div class="ball zero">0</div>
+<div class="multiplier">9X</div>
+</div>
+
+<div class="number-item">
+<div class="ball green">1</div>
+<div class="multiplier">9X</div>
+</div>
+
+<div class="number-item">
+<div class="ball red">2</div>
+<div class="multiplier">9X</div>
+</div>
+
+<div class="number-item">
+<div class="ball green">3</div>
+<div class="multiplier">9X</div>
+</div>
+
+<div class="number-item">
+<div class="ball red">4</div>
+<div class="multiplier">9X</div>
+</div>
+
+<div class="number-item">
+<div class="ball five">5</div>
+<div class="multiplier">9X</div>
+</div>
+
+<div class="number-item">
+<div class="ball red">6</div>
+<div class="multiplier">9X</div>
+</div>
+
+<div class="number-item">
+<div class="ball green">7</div>
+<div class="multiplier">9X</div>
+</div>
+
+<div class="number-item">
+<div class="ball red">8</div>
+<div class="multiplier">9X</div>
+</div>
+
+<div class="number-item">
+<div class="ball green">9</div>
+<div class="multiplier">9X</div>
+</div>
+
+</div>
+
+
+<div class="options">
+
+<button class="option random">Random</button>
+<button class="option active">X1</button>
+<button class="option">X5</button>
+<button class="option">X10</button>
+<button class="option">X20</button>
+<button class="option">X50</button>
+<button class="option">X100</button>
+
+</div>
+
+
+<div class="big-small">
+
+<div class="big">
+<span>Big</span>
+<span>2X</span>
+</div>
+
+<div class="small">
+<span>Small</span>
+<span>2X</span>
+</div>
+
+</div>
+
+
+<div class="input-card">
+
+<div class="input-title">
+Enter Last Result
+</div>
+
+<div class="input-row">
+
+<input
+id="lastInput"
+type="number"
+min="0"
+max="9"
+placeholder="Enter 0 - 9"
+>
+
+<button id="addBtn">
+ADD
+</button>
+
+</div>
+
+</div>
+
+
+<div class="final-card">
+
+<div class="final-title">
+NEXT RESULT
+</div>
+
+<div
+class="final-ball waiting"
+id="finalBall"
+>
+-
+</div>
+
+<div
+class="final-type"
+id="finalType"
+>
+WAITING
+</div>
+
+<div
+class="final-color"
+id="finalColor"
+>
+ENTER LAST RESULT
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* =========================
+   BIG / SMALL
+========================= */
+
+function sizeOf(n){
+
+return n >= 5
+? "BIG"
+: "SMALL";
+
+}
+
+
+/* =========================
+   COLOR
+========================= */
+
+function colorOf(n){
+
+if(n === 0 || n === 5){
+return "VIOLET";
+}
+
+if([1,3,7,9].includes(n)){
+return "GREEN";
+}
+
+return "RED";
+
+}
+
+
+/* =========================
+   RELATED NUMBERS
+========================= */
+
+const related = {
+
+0:[2,5,9,6],
+
+1:[6,9,7,4],
+
+2:[6,9,0,5],
+
+3:[7,4,8,1],
+
+4:[8,3,6,7],
+
+5:[0,2,6,8],
+
+6:[2,1,5,4],
+
+7:[3,1,8,4],
+
+8:[4,3,7,2],
+
+9:[1,2,0,6]
+
+};
+
+
+/* =========================
+   NEXT NUMBER
+========================= */
+
+function calculateNext(last){
+
+let candidates =
+related[last] ||
+[0,1,2,3,4,5,6,7,8,9];
+
+
+/*
+   30-second slot changes the
+   selected candidate.
+*/
+
+const slot =
+Math.floor(Date.now() / 30000);
+
+let index =
+slot % candidates.length;
+
+let next =
+candidates[index];
+
+
+/*
+   Same number repeat avoid.
+*/
+
+if(next === last){
+
+index =
+(index + 1) % candidates.length;
+
+next =
+candidates[index];
+
+}
+
+return next;
+
+}
+
+
+/* =========================
+   SHOW RESULT
+========================= */
+
+function showResult(next){
+
+const ball =
+document.getElementById("finalBall");
+
+const type =
+document.getElementById("finalType");
+
+const color =
+document.getElementById("finalColor");
+
+
+ball.textContent = next;
+
+ball.className = "final-ball";
+
+
+const resultColor =
+colorOf(next);
+
+
+if(resultColor === "GREEN"){
+
+ball.classList.add("green-result");
+
+}
+
+else if(resultColor === "RED"){
+
+ball.classList.add("red-result");
+
+}
+
+else{
+
+ball.classList.add("violet-result");
+
+}
+
+
+type.textContent =
+sizeOf(next);
+
+color.textContent =
+resultColor;
+
+}
+
+
+/* =========================
+   ADD LAST RESULT
+========================= */
+
+function addResult(){
+
+const input =
+document.getElementById("lastInput");
+
+const value =
+Number(input.value);
+
+
+if(
+input.value === "" ||
+!Number.isInteger(value) ||
+value < 0 ||
+value > 9
+){
+
+alert(
+"0 se 9 ke beech ek number enter karo."
+);
+
+return;
+
+}
+
+
+const next =
+calculateNext(value);
+
+showResult(next);
+
+input.value = "";
+
+}
+
+
+document
+.getElementById("addBtn")
+.addEventListener(
+"click",
+addResult
+);
+
+
+document
+.getElementById("lastInput")
+.addEventListener(
+"keydown",
+function(e){
+
+if(e.key === "Enter"){
+addResult();
+}
+
+}
+);
+
+
+/* =========================
+   30 SECOND TIMER
+========================= */
+
+function updateTimer(){
+
+const seconds =
+new Date().getSeconds();
+
+let remaining;
+
+
+if(seconds < 30){
+
+remaining =
+29 - seconds;
+
+}
+
+else{
+
+remaining =
+59 - seconds;
+
+}
+
+
+document
+.getElementById("t1")
+.textContent =
+Math.floor(
+remaining / 10
+);
+
+
+document
+.getElementById("t2")
+.textContent =
+remaining % 10;
+
+}
+
+
+/* =========================
+   PERIOD
+========================= */
+
+const START_PERIOD = 62;
+
+const START_SLOT =
+Math.floor(Date.now() / 30000);
+
+
+function updatePeriod(){
+
+const currentSlot =
+Math.floor(Date.now() / 30000);
+
+
+const difference =
+currentSlot - START_SLOT;
+
+
+const periodNumber =
+START_PERIOD + difference;
+
+
+document
+.getElementById("period")
+.textContent =
+"20260822000" +
+String(periodNumber)
+.padStart(2,"0");
+
+}
+
+
+/* =========================
+   OPTION BUTTONS
+========================= */
+
+const buttons =
+document.querySelectorAll(".option");
+
+
+buttons.forEach(button=>{
+
+button.addEventListener(
+"click",
+function(){
+
+buttons.forEach(btn=>{
+
+btn.classList.remove("active");
+
+});
+
+this.classList.add("active");
+
+}
+);
+
+});
+
+
+/* =========================
+   START
+========================= */
+
+updateTimer();
+
+updatePeriod();
+
+
+setInterval(
+function(){
+
+updateTimer();
+
+updatePeriod();
+
+},
+250
+);
+
+</script>
+
+</body>
+</html>
